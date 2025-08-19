@@ -32,3 +32,4 @@ jobs:
         env:
           PYTHONPATH: src  # Ensure src is in the Python path for test discovery
         run: pytest -v --maxfail=1 --disable-warnings
+        
