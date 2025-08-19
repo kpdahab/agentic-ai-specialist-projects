@@ -28,6 +28,9 @@ jobs:
       - name: Install dependencies with uv
         run: uv pip install -r requirements.txt --system
 
+      - name: Install project in editable mode
+        run: uv pip install -e . --system
+
       - name: Run unit tests with pytest
         env:
           PYTHONPATH: src  # Ensure src is in the Python path for test discovery
