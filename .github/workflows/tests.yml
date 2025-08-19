@@ -31,4 +31,4 @@ jobs:
           uv pip install -r requirements-dev.txt --system
 
       - name: Run unit tests with pytest
-        run: pytest -v --maxfail=1 --disable-warnings
+        run: pytest
