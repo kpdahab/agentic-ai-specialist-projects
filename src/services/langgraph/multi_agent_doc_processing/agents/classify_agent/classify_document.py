@@ -1,4 +1,4 @@
-from src.services.langgraph.state import DocumentState, DOCUMENT_TYPES
+from src.services.langgraph.multi_agent_doc_processing.state import DocumentState, DOCUMENT_TYPES
 from langchain_core.messages import AIMessage
 
 def classify_document(state: DocumentState, llm) -> DocumentState:

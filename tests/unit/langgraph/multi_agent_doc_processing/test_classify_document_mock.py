@@ -1,5 +1,5 @@
 import pytest
-from src.services.langgraph.agents.classify_agent.classify_document import classify_document
+from src.services.langgraph.multi_agent_doc_processing.agents.classify_agent.classify_document import classify_document
 
 # Minimal mock class that mimics the real LLM's .invoke() method
 class MockLLMResponse:

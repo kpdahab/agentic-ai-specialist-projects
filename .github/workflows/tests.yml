@@ -35,6 +35,6 @@ jobs:
         run: PYTHONPATH=. pytest -v -m "unit" --maxfail=1 --disable-warnings
 
       - name: Run integration tests only
-        run: PYTHONPATH=. pytest -v -m "integration" --maxfail=1 --disable-warnings
+        run: PYTHONPATH=. pytest -v -m "integration and not ollama" --maxfail=1 --disable-warnings
 
         
