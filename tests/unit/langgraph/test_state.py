@@ -27,6 +27,7 @@ def test_document_state_structure():
     assert state["document_type"] == "invoice"
     assert isinstance(state["messages"], list)
 
+@pytest.mark.unit
 @pytest.mark.parametrize("doc_type", ["invoice", "contract", "receipt", "report"])
 def test_document_types_configuration(doc_type):
     """Ensure each document type as the required keys"""
