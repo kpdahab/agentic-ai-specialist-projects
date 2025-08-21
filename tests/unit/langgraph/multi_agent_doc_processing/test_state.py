@@ -2,7 +2,7 @@
 # Unit tests for state.py
 # =============================================================================
 
-from src.services.langgraph.state import DocumentState, DOCUMENT_TYPES
+from src.services.langgraph.multi_agent_doc_processing.state import DocumentState, DOCUMENT_TYPES
 import pytest
 
 def test_document_state_structure():

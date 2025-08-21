@@ -1,8 +1,8 @@
 import pytest
-from src.services.langgraph.agents.classify_agent.classify_document import classify_document
+from src.services.langgraph.multi_agent_doc_processing.agents.classify_agent.classify_document import classify_document
 from src.llm_manager import get_llm
 
-@pytest.mark.integration  # Mark as integration since it requires Ollama running locally
+@pytest.mark.ollama  # Mark as integration since it requires Ollama running locally
 @pytest.mark.parametrize(
     "content,expected",
     [
