@@ -7,6 +7,7 @@ openai==1.68.2                   # Your existing OpenAI version
 jupyter==1.1.1                   # Your existing Jupyter version
 python-dotenv==1.0.1             # Your existing dotenv version
 ipykernel==6.29.5                # Your existing kernel version
+langgraph
 
 # =============================================================================
 # COMPATIBLE LANGCHAIN ECOSYSTEM (MATCHING LANGCHAIN 0.3.10)
