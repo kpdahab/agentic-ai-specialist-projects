@@ -1,52 +1,30 @@
 # =============================================================================
 # CORE 
 # =============================================================================
-langflow==1.2.0                  # Your existing Langflow version
-langchain==0.3.10                # Your existing LangChain version  
-openai==1.68.2                   # Your existing OpenAI version
-jupyter==1.1.1                   # Your existing Jupyter version
-python-dotenv==1.0.1             # Your existing dotenv version
-ipykernel==6.29.5                # Your existing kernel version
+langflow==1.2.0
+langchain==0.3.10
+openai==1.68.2
 langgraph
+python-dotenv
+jupyter==1.1.1
+ipykernel==6.29.5 
 
 # =============================================================================
-# COMPATIBLE LANGCHAIN ECOSYSTEM (MATCHING LANGCHAIN 0.3.10)
+# INTEGRATIONS
 # =============================================================================
-langchain-core>=0.3.0,<0.4.0     # Compatible with langchain 0.3.10
-langchain-community>=0.3.0,<0.4.0 # Compatible with langchain 0.3.10
-sentence-transformers==4.1.0
-huggingface-hub==0.32.4                   # Hugging Face Hub for model sharing
-langchain-huggingface==0.1.2           # Hugging Face integration for LangChain
-# =============================================================================
-# LLM PROVIDER INTEGRATIONS (COMPATIBLE VERSIONS)
-# =============================================================================
+langchain-openai>=0.2.0,<0.3.0   # For OpenAI
+langchain-ollama>=0.2.0,<0.3.0   # For Ollama
 
-# OpenAI (already have openai==1.68.2, adding LangChain integration)
-langchain-openai>=0.2.0,<0.3.0   # Compatible with langchain 0.3.10
-
-# Anthropic Claude
-langchain-anthropic==0.3.0
-anthropic>=0.34.0                 # Core Anthropic SDK
-
-# Google Gemini  
-langchain-google-genai>=2.0.0,<3.0.0
-google-generativeai>=0.8.0       # Core Google SDK
-
-# Groq (Ultra-fast inference)
-langchain-groq>=0.2.0,<0.3.0
-groq>=0.9.0                      # Core Groq SDK
-
-# Mistral
-langchain-mistralai>=0.2.0,<0.3.0
-mistralai>=1.0.0                 # Core Mistral SDK
-
-# Ollama (Local models - your DeepSeek R1!)
-langchain-ollama>=0.2.0,<0.3.0
+# Optional extras (ONLY if you used in code):
+# langchain-anthropic==0.3.0
+# langchain-google-genai>=2.0.0,<3.0.0
+# langchain-groq>=0.2.0,<0.3.0
+# langchain-mistralai>=0.2.0,<0.3.0
 
 # =============================================================================
-# UTILITIES & DISPLAY (COMPATIBLE VERSIONS)
+# UTILITIES 
 # =============================================================================
-requests>=2.31.0                 # HTTP requests (for Ollama health checks)
-rich>=13.7.0                     # Beautiful terminal output
-pandas>=2.0.0                    # Data manipulation
-numpy>=1.24.0                    # Numerical computing
+requests>=2.31.0
+rich>=13.7.0
+pandas>=2.0.0
+numpy>=1.24.0
