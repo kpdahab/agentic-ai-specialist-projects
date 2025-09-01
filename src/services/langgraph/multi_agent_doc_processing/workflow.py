@@ -1,6 +1,6 @@
 import functools
 from langgraph.graph import StateGraph, END
-from langchain_community.llms import Ollama 
+from langchain_ollama import OllamaLLM 
 from src.services.langgraph.multi_agent_doc_processing.state import DocumentState
 from src.services.langgraph.multi_agent_doc_processing.agents.classify_agent.classify_document import classify_document
 from src.services.langgraph.multi_agent_doc_processing.agents.extract_agent.extract_data import extract_data

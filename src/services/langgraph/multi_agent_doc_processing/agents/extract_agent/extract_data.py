@@ -10,27 +10,37 @@ def extract_data(state: DocumentState, llm) -> DocumentState:
     print(f"Extracting {len(required_fields)} fields from {doc_type}")
     
     prompt = f"""
-Extract these fields from the {doc_type}:
-{', '.join(required_fields)}
+    Extract these fields from the {doc_type}:
+    {', '.join(required_fields)}
 
-Document:
-{state['document_content']}
+    Document:
+    {state['document_content']}
 
-Return JSON format. Use "NOT_FOUND" for missing fields:
-{{
-    {', '.join([f'"{field}": "value"' for field in required_fields])}
-}}
-""".strip()
+    Return JSON format. Use "NOT_FOUND" for missing fields:
+    {{
+        {', '.join([f'"{field}": "value"' for field in required_fields])}
+    }}
+    """.strip()
     
     try:
+        # Handle both new and old LLM outputs
         response = llm.invoke(prompt)
-        # Extract JSON from response (assume response.content is string)
-        json_start = response.content.find('{')
-        json_end = response.content.rfind('}') + 1
+        if hasattr(response, "content"):   # old community Ollama
+            raw_output = response.content
+        else:                              # new langchain-ollama
+            raw_output = str(response)
+
+        # Try to extract JSON
+        json_start = raw_output.find('{')
+        json_end = raw_output.rfind('}') + 1
         
         if json_start != -1 and json_end > json_start:
-            json_str = response.content[json_start:json_end]
-            extracted_data = json.loads(json_str)
+            json_str = raw_output[json_start:json_end]
+            try:
+                extracted_data = json.loads(json_str)
+            except json.JSONDecodeError:
+                print("⚠️ LLM returned malformed JSON, marking all fields as NOT_FOUND")
+                extracted_data = {field: "NOT_FOUND" for field in required_fields}
         else:
             extracted_data = {field: "NOT_FOUND" for field in required_fields}
         
@@ -42,7 +52,8 @@ Return JSON format. Use "NOT_FOUND" for missing fields:
         state['extracted_data'] = extracted_data
         state['processing_stage'] = 'extracted'
         state['next_action'] = 'validate_data'
-        
+
+        # Logging
         found_count = len([v for v in extracted_data.values() if v != "NOT_FOUND"])
         print(f"Extracted {found_count}/{len(required_fields)} fields")
         

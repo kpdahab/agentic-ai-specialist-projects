@@ -1,6 +1,6 @@
 import functools
 from langgraph.graph import StateGraph, END
-from langchain_community.llms import Ollama 
+from langchain_ollama import OllamaLLM
 from src.services.langgraph.multi_agent_doc_processing.state import DocumentState
 from src.services.langgraph.multi_agent_doc_processing.agents.classify_agent.classify_document import classify_document
 from src.services.langgraph.multi_agent_doc_processing.agents.extract_agent.extract_data import extract_data
@@ -14,7 +14,7 @@ def create_document_workflow(llm=None) -> StateGraph:
     """
     # Use injected LLM if provided, else create real one
     if llm is None:
-        llm = Ollama(model="llama3.2", temperature=0)
+        llm = OllamaLLM(model="llama3.2", temperature=0)
 
     classify_with_llm = functools.partial(classify_document, llm=llm)
     extract_with_llm = functools.partial(extract_data, llm=llm)

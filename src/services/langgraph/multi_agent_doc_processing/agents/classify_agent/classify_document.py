@@ -20,7 +20,12 @@ Type:""".strip()
 
     try:
         response = llm.invoke(prompt)
-        detected_type = (response.content or "").strip().lower()
+        detected_type = ""
+        if hasattr(response, "content"):
+            detected_type = (response.content or "").strip().lower()
+        else:
+            detected_type = str(response).strip().lower()
+
 
         if detected_type in DOCUMENT_TYPES:
             confidence = 0.9

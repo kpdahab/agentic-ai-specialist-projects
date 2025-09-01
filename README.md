@@ -50,3 +50,23 @@ for enterprise workflows—transforming business operations from bottlenecked an
 - **Expand database schema** for richer analytics/audit trails in RDS/DynamoDB  
 - **Enable event-driven triggers** via EventBridge/SQS/Kinesis streams  
 - ***Continue refining modularity/testing*** as new features are added
+
+---
+
+## Running the Demo
+A standalone demo workflow is included to showcase the Intelligent Document Processing Pipeline locally with Ollama. The demo will print end‑to‑end workflow results: classification, extraction, validation, and routing for different document types.
+
+- **Location:**
+demo/langgraph_document_processing_agents/demo_document_processing_workflow.py
+
+- **Instructions:**
+See the Demo README (demo/langgraph_document_processing_agents) for complete setup steps, including:
+
+- **Installing Ollama**
+- Running Ollama in the background
+- Pulling a local model (e.g. llama3.2)
+- Activating the Python environment
+- Running the demo script with sample documents
+- Once set up, simply run from the project root:
+PYTHONPATH=. python demo/langgraph_document_processing_agents/demo_document_processing_workflow.py
+
