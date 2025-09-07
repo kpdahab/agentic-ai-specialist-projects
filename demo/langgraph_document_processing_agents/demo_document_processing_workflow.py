@@ -1,17 +1,14 @@
-# demo/test_document_processing_workflow.py
+# =============================================================================
+# Demo script: end-to-end workflow processing with Ollama as the LLM.
+# =============================================================================
 
-"""
-Demo script: end-to-end workflow processing with Ollama as the LLM.
-
-"""
 import requests, sys
 from src.services.langgraph.multi_agent_doc_processing.workflow import create_document_workflow
 from src.services.langgraph.multi_agent_doc_processing.state import DocumentState
-from langchain_community.llms import Ollama  # <--- make sure langchain-ollama is in requirements
+from langchain_ollama import OllamaLLM
 
 print("🧪 END-TO-END WORKFLOW DEMO (using Ollama)")
 print("=" * 55)
-
 
 try:
     requests.get("http://localhost:11434/api/version", timeout=2)
@@ -20,7 +17,7 @@ except Exception:
 
 
 # Use Ollama as the backend LLM (adjust model as needed)
-llm = Ollama(model="llama3.2", temperature=0)
+llm = OllamaLLM(model="llama3.2", temperature=0)
 
 workflow = create_document_workflow(llm=llm)
 
