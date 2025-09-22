@@ -26,8 +26,8 @@ source .venv/bin/activate
 pip install --upgrade pip
 
 6. Install project dependencies
-pip install -r requirements.txt
-pip install pytest
+uv pip install -r requirements.txt
+uv pip install pytest
 - Troubleshoot:
 -- which pytest (should show: /venv/bin/pytest). If not: export PATH="$(pwd)/.venv/bin:$PATH"
 
@@ -61,12 +61,25 @@ py -3.12 -m venv .venv
 4. Activate the environment:
 .venv\Scripts\activate
 
+# ------------------------------------------------
+Alternatively: Create virtual evironment with Conda
+
+# Create a new environment called "agentic" with Python 3.12
+1. conda create -n agentic python=3.12
+
+# Activate it
+2. conda activate agentic
+
+# Verify
+3. python --version   # should show Python 3.12.x
+# ------------------------------------------------
+
 5. Upgrade pip (optional but recommended):
 python -m pip install --upgrade pip
 
 6. Install project dependencies:
-pip install -r requirements.txt
-pip install pytest
+uv pip install -r requirements.txt
+uv pip install pytest
 
 7. Set PYTHONPATH so tests can find your src modules:
 set PYTHONPATH=.
