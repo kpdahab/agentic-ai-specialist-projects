@@ -1,19 +1,12 @@
 # =============================================================================
-# MAC - UNIT TEST PREREQUISITE 
+# MAC - UNIT TEST SETUP 
 # =============================================================================
 
-1. Install Python 3.12 (if not already installed)
-On Ubuntu/Debian:
-sudo apt update
-sudo apt install -y software-properties-common
-sudo add-apt-repository ppa:deadsnakes/ppa
-sudo apt update
-sudo apt install -y python3.12 python3.12-venv python3.12-dev
+1. Install Python 3.12 with Homebrew:
+   ```bash
+   brew install python@3.12
 
-On macOS (with Homebrew):
-brew install python@3.12
-
-2. Verify Python 3.12 installation
+2. Verify Python
 python3.12 --version
 
 3. Create a virtual environment using Python 3.12
@@ -23,11 +16,13 @@ python3.12 -m venv .venv
 source .venv/bin/activate
 
 5. Upgrade pip (optional but recommended)
-pip install --upgrade pip
+python -m pip install --upgrade pip
 
-6. Install project dependencies
+6. # Install dependencies with uv (faster than pip, recommended)
+# If you don’t have uv, install it: pip install uv
 uv pip install -r requirements.txt
 uv pip install pytest
+
 - Troubleshoot:
 -- which pytest (should show: /venv/bin/pytest). If not: export PATH="$(pwd)/.venv/bin:$PATH"
 
@@ -37,13 +32,15 @@ export PYTHONPATH=.
 8. Run all unit tests with verbose output (unit-marked only)
 pytest -v -m "unit"
 
+Note: Note: Markers like `-m unit` and `-m integration` are defined in `pytest.ini` at the project root.
+
 --- VS Code users: ---
 To select the interpreter:
 Press Cmd+Shift+P → "Python: Select Interpreter" → Choose ".venv/bin/python"
 
 
 # =============================================================================
-# WINDOWS - UNIT TEST PREREQUISITE 
+# WINDOWS - UNIT TEST SETUP 
 # =============================================================================
 
 1. Download Python 3.12 from https://www.python.org/downloads/windows/
@@ -82,10 +79,12 @@ uv pip install -r requirements.txt
 uv pip install pytest
 
 7. Set PYTHONPATH so tests can find your src modules:
-set PYTHONPATH=.
+$env:PYTHONPATH="."
 
 8. Run all unit tests with verbose output (unit-marked only):
 pytest -v -m "unit"
+
+Note: Note: Markers like `-m unit` and `-m integration` are defined in `pytest.ini` at the project root.
 
 --- VS Code users: ---
 To select the interpreter:

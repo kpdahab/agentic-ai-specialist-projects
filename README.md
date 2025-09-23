@@ -8,31 +8,46 @@ This portfolio demonstrates my expertise as a backend **GenAI engineer**, showca
 
 ## **Business Problem**
 
-Enterprises spend excessive time and money on **manual document processing**—staff must **search for files**, **extract and enter data**, verify information across varied formats, and repeatedly fix errors. Similarly, handling repetitive **IT support tickets** (like password resets or VPN issues) requires staff to triage requests, communicate back and forth with users, and update records by hand. These slow, error-prone workflows result in high labor costs, frequent mistakes (often 15%+ error rates), delayed responses, and prevent teams from focusing on strategic work.  
-A modern solution requires **multi-agent automation**, **persistent memory**, and **scalable APIs** to eliminate manual effort in both document workflows and IT ticket management—freeing employees for higher-value tasks while saving millions each year.
+Enterprises spend excessive time and money on **manual document processing**—staff must **search for files**, **extract/enter data**, verify information across varied formats, and repeatedly fix errors.  
+Repetitive **IT support tickets** (e.g., password resets or VPN issues) also waste time, requiring manual triage, communication, and updating records.  
+
+The result:  
+- **High labor costs**  
+- **Frequent mistakes (15%+ error rates)**  
+- **Slow response times**  
+- Teams unable to focus on strategic work  
+
+A modern solution requires:  
+✅ **Multi‑agent automation**  
+✅ **Persistent memory**  
+✅ **Scalable APIs**  
+
+This repo demonstrates how to build this with **LangGraph + AWS**.
 
 ---
 
 ## **Key Technologies & Engineering Best Practices**
 
-- **Multi-Agent Orchestration:** LangGraph + LangChain coordinate classification, extraction, validation, routing in modular agent nodes within a unified workflow.
-- **Cloud-Native Microservices:** The entire multi-agent workflow is deployed as a single scalable serverless service using AWS Lambda or ECS Docker containers.
-- **Persistent Memory:** DynamoDB stores session/user/document context for stateful automation; supports dynamic agent memory patterns.
-- **API Gateway:** Secure REST endpoints enable integration with web/mobile/enterprise apps; API-first design pattern.
-- **CI/CD Automation:** GitHub Actions runs all unit/integration tests on every push/PR; status badge in README signals code quality.
-- **Unit & Integration Testing:** Pytest covers all core modules; ensures reliability & rapid iteration.
-- **Production Python Engineering:** Modular `src/` layout; type hints; docstrings; secure secret management via environment variables/AWS IAM/GitHub Secrets.
-- **Containerization:** Dockerfile with uv-based dependency management enables fast builds and portable deployments to Lambda/ECS.
-- **Branch Workflow & PR Templates:** Feature branch development with pull request review gates enforces code quality before merging to main.
-- **Extensibility & Scalability:** Easily add new agents or swap LLM providers without refactoring the core pipeline.
+- **Multi‑Agent Orchestration:** LangGraph + LangChain coordinate specialized nodes for classification, extraction, validation, routing.  
+- **Cloud‑Native Serverless Microservices:** Workflow containerized with Docker and deployed on AWS Lambda (via ECR) behind API Gateway.  
+- **Persistent Memory:** DynamoDB table stores session/user/document state across workflow steps.  
+- **Secure APIs:** API Gateway HTTP API endpoints provide controlled SaaS‑style access.  
+- **Secrets Management:** API keys are stored in AWS Secrets Manager (injected at runtime, not in code).  
+- **Logging & Monitoring:** Centralized logs in CloudWatch with retention policies.  
+- **CI/CD Automation:** GitHub Actions (optional) validates Terraform, runs tests, and builds Docker images.  
+- **Python Engineering:** Modular `src/`, Pydantic models for state, unit tests with Pytest.  
+- **Extensibility:** Swap LLM providers via `LLM_PROVIDER` env var (OpenAI, Anthropic, **Bedrock‑ready**).  
+- **Makefile Workflow:** Wraps Docker + AWS CLI + Terraform into simple `make build` / `make deploy` flows.  
 
 ---
 
 ## How These Technologies Solve the Business Problem
 
-By orchestrating multiple intelligent agents with **LangGraph/LangChain**, this platform replaces slow, error-prone manual tasks—such as searching for documents, extracting and entering data, verifying information across formats, correcting errors, and managing repetitive IT support tickets—with a seamless automated workflow. All agents collaborate within a single scalable microservice deployed on **AWS Lambda** or **ECS**, enabling 24/7 document handling and support without human intervention.
-
-Leveraging persistent memory in **DynamoDB** ensures agents retain context across sessions for accurate processing and responsive IT ticket management. Secure APIs provided by **API Gateway** enable easy integration with enterprise systems. Automated CI/CD pipelines guarantee every change is tested before deployment.
+- Multi‑agents automate document classification, extraction, validation, routing, and IT ticket handling.
+- State continuity (via DynamoDB) ensures context‑aware automation.
+- Secrets Manager + IAM ensure secure credential handling (audit‑friendly).
+- Logs in CloudWatch provide monitoring + incident visibility.
+- Containerized Lambda behind API Gateway = scalable API endpoints for enterprise integration.
 
 As a result, the solution delivers:
 - **96% faster processing**
@@ -40,16 +55,6 @@ As a result, the solution delivers:
 - Over **$6.8M in annual savings**
 
 for enterprise workflows—transforming business operations from bottlenecked and costly to efficient, reliable, and scalable.
-
----
-
-## Next Steps / Expansion Plans
-
-- **Integrate Amazon Bedrock Knowledge Base** for advanced retrieval‑augmented generation  
-- **Add marketing/sales agent workflows** as new microservices  
-- **Expand database schema** for richer analytics/audit trails in RDS/DynamoDB  
-- **Enable event-driven triggers** via EventBridge/SQS/Kinesis streams  
-- ***Continue refining modularity/testing*** as new features are added
 
 ---
 
@@ -69,4 +74,113 @@ See the Demo README (demo/langgraph_document_processing_agents) for complete set
 - Running the demo script with sample documents
 - Once set up, simply run from the project root:
 PYTHONPATH=. python demo/langgraph_document_processing_agents/demo_document_processing_workflow.py
+
+---
+
+## Local Docker Testing & Terraform Deployment
+docker build -t my-agentic-app -f infra/Dockerfile .
+docker run -p 9000:8080 -e OPENAI_API_KEY=sk-your-key my-agentic-app
+curl -XPOST http://localhost:9000/2015-03-31/functions/function/invocations \
+  -d '{"document_content":"Hello World"}'
+
+More details: infra/README.md 
+
+---
+
+## Terraform Deployment (With Makefile)
+- **Common commands:**
+make build     # build docker image
+make login     # login to AWS ECR
+make push      # push image to ECR
+make tf-plan   # terraform plan
+make deploy    # build + push + terraform apply
+make invoke    # curl deployed API Gateway
+make destroy   # teardown infra
+
+- **Single command deploy:**
+export OPENAI_API_KEY=sk-your-openai-key
+export ANTHROPIC_API_KEY=sk-your-anthropic-key
+make deploy
+
+More details: infra/README.md 
+
+---
+
+## Next Steps / Expansion Plans
+
+- **Amazon Bedrock integration** Extend beyond OpenAI/Anthropic by enabling Amazon Bedrock foundation models (Claude, Mistral, Titan) in workflows, unlocking multi‑model orchestration and retrieval‑augmented generation (RAG) scenarios with LangGraph + Bedrock.
+- **Additional agent workflows (marketing, sales, IT)** Deploy new multi‑agent pipelines alongside the document processing workflow to prove modular orchestration (e.g., Marketing campaign classification, Sales email triage, or IT ticket agent).
+- **Richer session schema & analytics** Extend DynamoDB schema (or complement with RDS) for audit logs, compliance trails, and BI analytics over agent decisions and workflow outcomes.
+- **Event‑driven automation** Integrate EventBridge, SQS, Kinesis to trigger workflows in real‑time from external enterprise systems (document ingestion, ITSM events).
+- **Hybrid Kubernetes deployment (EKS)** Demonstrate portability by deploying the same container images + Terraform modules into Kubernetes/EKS for high‑availability, multi‑tenant enterprise scaling (see AWS Bedrock on EKS).
+- **CI/CD pipeline hardening** Set up GitHub Actions to perform Docker build + push, Terraform plan/apply validation, automated unit/integration tests, and drift detection for infra.
+
+---
+
+## Architecture Diagram
+
+                 +---------------------+
+                 |   Client / curl /   |
+                 |   Web/Mobile UI     |
+                 +----------+----------+
+                            |
+                            v
+                 +----------+----------+
+                 |  API Gateway (HTTP) |
+                 +----------+----------+
+                            |
+                            v
+                 +----------+----------+
+                 | AWS Lambda (Docker) |
+                 | - LangGraph workflow|
+                 | - app.py handler    |
+                 +----------+----------+
+                      |     |       |
+      ----------------+     |       +--------------------
+      |                    |                              
+      v                    v                               v
++-----+---------+   +------+---------+           +----------------------+
+| AWS Secrets   |   |  DynamoDB      |           | CloudWatch Logs      |
+| Manager       |   | (Session store)|           | (14d retention)      |
+| - OpenAI key  |   | - Session data |           +----------------------+
+| - Anthropic   |   | - Audit trails |
+| - Bedrock cfg |   +----------------+
++---------------+  
+
+                        |
+                        v
+             +-----------------------+
+             |  LLM Providers (multi)|
+             | - OpenAI (API Key)    |
+             | - Anthropic Claude    |
+             | - Amazon Bedrock RAG  |
+             +-----------------------+
+
+--- Future Expansion (Planned) -------------------------------------------
+
+   +---------------------+
+   |  Event Sources      |
+   | - S3 ingestion      |
+   | - SQS / Kinesis     |
+   | - EventBridge rules |
+   +----------+----------+
+              |
+              v
+   +----------+----------+
+   |  Triggers workflows |
+   |  asynchronously     |
+   +---------------------+
+
+   +---------------------+         +----------------------+
+   | Kubernetes (EKS)    | <-----> | Dockerized workflow  |
+   | - Scaled microserv. |         | containers, multi-env|
+   +---------------------+         +----------------------+
+
+   +---------------------+
+   | CI/CD Pipelines     |
+   | (GitHub Actions)    |
+   | - Docker build/push |
+   | - Terraform plan/app|
+   | - Pytest suites     |
+   +---------------------+
 
