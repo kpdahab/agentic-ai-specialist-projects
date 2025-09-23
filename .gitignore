@@ -68,3 +68,4 @@ nosetests.xml
 pytest_cache/
 .env
 myvenv/
+.venv/
