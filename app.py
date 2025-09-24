@@ -83,9 +83,6 @@ def serialize(obj):
 def handler(event, context):
     try:
         workflow = get_app()
-        print(">>> Workflow is:", workflow)
-        print(">>> Workflow type:", type(workflow))
-
 
         # Handle API Gateway payloads (body may be str)
         body = json.loads(event["body"]) if "body" in event and isinstance(event["body"], str) else event

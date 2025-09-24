@@ -82,7 +82,7 @@ make reset    # optional: reset terraform state/cache
 
 ------------------------------
 
-## 📊 Architecture Diagram
+## Architecture Diagram
 
 ```text
            +-------------------+

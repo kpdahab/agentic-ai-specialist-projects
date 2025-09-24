@@ -1,4 +1,6 @@
-# Project settings
+# ----------------------------
+# Project Settings
+# ----------------------------
 PROJECT_NAME = my-agentic-app
 AWS_REGION   ?= us-east-1
 ACCOUNT_ID   := $(shell aws sts get-caller-identity --query Account --output text)
@@ -8,7 +10,11 @@ IMAGE_TAG    = latest
 # Terraform directory
 TF_DIR = infra/terraform
 
-.PHONY: build login tag push tf-init tf-apply deploy destroy clean
+.PHONY: build login tag push tf-init tf-plan tf-apply deploy destroy fmt validate invoke clean reset
+
+# ----------------------------
+# Docker Commands
+# ----------------------------
 
 ## Build Docker image
 build:
@@ -27,29 +33,24 @@ tag:
 push: tag
 	docker push $(ECR_REPO):$(IMAGE_TAG)
 
-## Terraform init
+# ----------------------------
+# Terraform Commands
+# ----------------------------
+
 tf-init:
 	cd $(TF_DIR) && terraform init
 
-## Terraform apply (requires var for secrets)
+tf-plan:
+	cd $(TF_DIR) && terraform plan \
+		-var="aws_region=$(AWS_REGION)" \
+		-var='openai_api_key=$$OPENAI_API_KEY' \
+		-var='anthropic_api_key=$$ANTHROPIC_API_KEY'
+
 tf-apply:
 	cd $(TF_DIR) && terraform apply -auto-approve \
 		-var="aws_region=$(AWS_REGION)" \
-		-var="openai_api_key=$$OPENAI_API_KEY" \
-		-var="anthropic_api_key=$$ANTHROPIC_API_KEY"
-
-## Full deploy: build + push + terraform apply
-deploy: build login push tf-init tf-apply
-	@echo "✅ Deployment complete!"
-	@echo "API Gateway URL:"
-	cd $(TF_DIR) && terraform output api_url
-
-## Destroy all Terraform resources
-destroy:
-	cd $(TF_DIR) && terraform destroy -auto-approve \
-		-var="aws_region=$(AWS_REGION)" \
-		-var="openai_api_key=$$OPENAI_API_KEY" \
-		-var="anthropic_api_key=$$ANTHROPIC_API_KEY"
+		-var='openai_api_key=$$OPENAI_API_KEY' \
+		-var='anthropic_api_key=$$ANTHROPIC_API_KEY'
 
 ## Format terraform code
 fmt:
@@ -59,12 +60,37 @@ fmt:
 validate:
 	cd $(TF_DIR) && terraform validate
 
-## Clean dev artifacts (safe clean)
+# ----------------------------
+# Full Deploy & Destroy
+# ----------------------------
+
+## Full deploy pipeline: build + push + terraform apply
+deploy: build login push tf-init fmt validate tf-apply
+	@echo "✅ Deployment complete!"
+	@echo "API Gateway URL:"
+	cd $(TF_DIR) && terraform output api_url
+
+destroy:
+	cd $(TF_DIR) && terraform destroy -auto-approve \
+		-var="aws_region=$(AWS_REGION)" \
+		-var='openai_api_key=$$OPENAI_API_KEY' \
+		-var='anthropic_api_key=$$ANTHROPIC_API_KEY'
+
+# ----------------------------
+# Utilities
+# ----------------------------
+
+## Invoke deployed endpoint with sample input
+invoke:
+	curl -XPOST "$$(cd $(TF_DIR) && terraform output -raw api_url)/" \
+		-d '{"document_content": "Hello from Makefile"}'
+
+## Clean local Docker artifacts
 clean:
 	docker rmi $(PROJECT_NAME):latest || true
 	docker rmi $(ECR_REPO):$(IMAGE_TAG) || true
 
-## Reset terraform state (heavy clean - optional)
+## Reset Terraform state (unsafe - use if stuck)
 reset:
 	cd $(TF_DIR) && rm -rf .terraform
 	cd $(TF_DIR) && rm -f .terraform.lock.hcl
